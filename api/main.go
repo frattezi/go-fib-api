@@ -13,9 +13,17 @@ import (
 
 func handleRequests(port string) {
 	// Route setup - fib
-	fibHandler := http.HandlerFunc(handlers.FibService)
-	fibChain := alice.New(middlewares.TimeoutMiddleware, nosurf.NewPure, middlewares.LoggingMiddleware).ThenFunc(fibHandler)
+	fibHandler := http.HandlerFunc(handlers.FibHandler)
+	healthHandler := http.HandlerFunc(handlers.HealthCheckHandler)
+
+	fibChain := alice.New(
+		middlewares.TimeoutMiddleware,
+		nosurf.NewPure,
+		middlewares.LoggingMiddleware,
+	).ThenFunc(fibHandler)
+
 	http.Handle("/fib", fibChain)
+	http.Handle("/health-check", healthHandler)
 
 	log.Fatal(http.ListenAndServe(port, nil))
 }
