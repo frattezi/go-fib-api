@@ -12,19 +12,32 @@ import (
 )
 
 func handleRequests(port string) {
-	// Route setup - fib
+	// Route setup
 	fibHandler := http.HandlerFunc(handlers.FibHandler)
 	healthHandler := http.HandlerFunc(handlers.HealthCheckHandler)
+	redisHandler := http.HandlerFunc(handlers.RedisHandler)
 
+	// TODO(Frattezi): Can be better encapsulated
 	fibChain := alice.New(
 		middlewares.TimeoutMiddleware,
 		nosurf.NewPure,
 		middlewares.LoggingMiddleware,
+		middlewares.SetHeadersMiddleware,
 	).ThenFunc(fibHandler)
 
-	http.Handle("/fib", fibChain)
-	http.Handle("/health-check", healthHandler)
+	healthChain := alice.New(
+		middlewares.TimeoutMiddleware,
+		nosurf.NewPure,
+		middlewares.LoggingMiddleware,
+		middlewares.SetHeadersMiddleware,
+	).ThenFunc(healthHandler)
 
+	// Handlers bind
+	http.Handle("/fib", fibChain)
+	http.Handle("/health-check", healthChain)
+	http.Handle("/redis", redisHandler)
+
+	// Server start
 	log.Fatal(http.ListenAndServe(port, nil))
 }
 

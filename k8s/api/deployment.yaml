@@ -21,3 +21,35 @@ spec:
             cpu: "500m"
         ports:
         - containerPort: 8000
+
+      - name: redis
+        image: "redis:alpine"
+        volumeMounts:
+        - name: redis-storage
+          mountPath: /data/redis
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 6379
+      volumes:
+        - name: redis-storage
+          emptyDir: {}
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name:  fib-api
+spec:
+  selector:
+    app:  fib-api
+  type:  NodePort
+  ports:
+  - protocol: TCP 
+    port:  8000
+    targetPort:  8000
+    name: api
+  - port: 6379
+    name: redis

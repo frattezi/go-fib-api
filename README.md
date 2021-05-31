@@ -39,3 +39,18 @@ expected output:
 NAME      READY   UP-TO-DATE   AVAILABLE   AGE
 fib-api   1/1     1            1           58s
 ```
+
+---
+
+## About the test (to Argyle)
+
+Hi, I'm really happy with the test result, I've decided to use Golang for some reasons and I would like to
+ponctuate them here:
+
+- I have low experience with Golang yeat I've got excited with the oportunity to create a project using it.
+- I knew and already made some Golang API, but only in personal projects or using larger tools (gorilla mux, Kong).
+- To me, I thinks it's really cool to create something without depending a lot of third parties.
+
+With that in mind, I'm finishing the core solution (Basic API + Kubernetes) within ~5 hours, but I think I would like
+to enhance the system a little more.
+

@@ -19,7 +19,6 @@ func FibHandler(w http.ResponseWriter, r *http.Request) {
 
 	result := services.Fib(n)
 
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json")
-	io.WriteString(w, fmt.Sprintf("{result: %d}\n", result))
+	// Change to JSON object for response
+	io.WriteString(w, fmt.Sprintf("{result: %d}", result))
 }
