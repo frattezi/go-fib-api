@@ -14,6 +14,7 @@ import (
 func handleRequests(port string) {
 	// Route setup
 	fibHandler := http.HandlerFunc(handlers.FibHandler)
+	fibRedisHandler := http.HandlerFunc(handlers.FibRedisHandler)
 	healthHandler := http.HandlerFunc(handlers.HealthCheckHandler)
 	redisHandler := http.HandlerFunc(handlers.RedisHandler)
 
@@ -22,8 +23,13 @@ func handleRequests(port string) {
 		middlewares.TimeoutMiddleware,
 		nosurf.NewPure,
 		middlewares.LoggingMiddleware,
-		middlewares.SetHeadersMiddleware,
 	).ThenFunc(fibHandler)
+
+	fibRedisChain := alice.New(
+		middlewares.TimeoutMiddleware,
+		nosurf.NewPure,
+		middlewares.LoggingMiddleware,
+	).ThenFunc(fibRedisHandler)
 
 	healthChain := alice.New(
 		middlewares.TimeoutMiddleware,
@@ -34,6 +40,7 @@ func handleRequests(port string) {
 
 	// Handlers bind
 	http.Handle("/fib", fibChain)
+	http.Handle("/fibr", fibRedisChain)
 	http.Handle("/health-check", healthChain)
 	http.Handle("/redis", redisHandler)
 
