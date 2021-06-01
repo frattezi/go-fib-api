@@ -19,7 +19,7 @@ func FibRedis(n int, client *redis.Client, ctx context.Context) int {
 		}
 	}
 
-	_, err := client.Get(ctx, keyName).Result()
+	memValue, err := client.Get(ctx, keyName).Result()
 
 	if err == redis.Nil {
 		calculatedValue := FibRedis(n-1, client, ctx) + FibRedis(n-2, client, ctx)
@@ -27,13 +27,8 @@ func FibRedis(n int, client *redis.Client, ctx context.Context) int {
 		return calculatedValue
 	}
 
-	value, err := client.Get(ctx, keyName).Result()
+	result, err := strconv.Atoi(memValue)
 
-	if err != nil {
-		panic(err)
-	}
-
-	result, err := strconv.Atoi(value)
 	if err != nil {
 		panic(err)
 	}
