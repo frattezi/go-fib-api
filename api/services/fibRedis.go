@@ -7,6 +7,8 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
+// FibRedis will calculate the Fibonacci sequence value using a
+// Redis service as memory for the results.
 func FibRedis(n int, client *redis.Client, ctx context.Context) int {
 	keyName := strconv.Itoa(n)
 

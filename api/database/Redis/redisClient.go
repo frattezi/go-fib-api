@@ -2,13 +2,11 @@ package database
 
 import (
 	"context"
-	"errors"
-	"log"
 
 	"github.com/go-redis/redis/v8"
 )
 
-func GetRedisClient(ctx context.Context) *redis.Client {
+func GetRedisClient(ctx context.Context) (*redis.Client, error) {
 	client := redis.NewClient(&redis.Options{
 		Addr:     "redis:6379",
 		Password: "", // no password set
@@ -16,9 +14,5 @@ func GetRedisClient(ctx context.Context) *redis.Client {
 	})
 	_, err := client.Ping(ctx).Result()
 
-	if err != nil {
-		log.Fatal(errors.New("REDIS_CONNECTION"))
-	}
-
-	return client
+	return client, err
 }

@@ -6,45 +6,23 @@ import (
 	"net/http"
 
 	"github.com/frattezi/go-fib-api/handlers"
-	"github.com/frattezi/go-fib-api/middlewares"
-	"github.com/justinas/alice"
-	"github.com/justinas/nosurf"
+	"github.com/frattezi/go-fib-api/helpers"
 )
 
+// handlerResquests will setup routes and start an http server for a given port.
 func handleRequests(port string) {
-	// Route setup
 	fibHandler := http.HandlerFunc(handlers.FibHandler)
 	fibRedisHandler := http.HandlerFunc(handlers.FibRedisHandler)
 	healthHandler := http.HandlerFunc(handlers.HealthCheckHandler)
-	redisHandler := http.HandlerFunc(handlers.RedisHandler)
 
-	// TODO(Frattezi): Can be better encapsulated
-	fibChain := alice.New(
-		middlewares.TimeoutMiddleware,
-		nosurf.NewPure,
-		middlewares.LoggingMiddleware,
-	).ThenFunc(fibHandler)
+	fibChain := helpers.ChainMiddlewares(fibHandler)
+	fibRedisChain := helpers.ChainMiddlewares(fibRedisHandler)
+	healthChain := helpers.ChainMiddlewares(healthHandler)
 
-	fibRedisChain := alice.New(
-		middlewares.TimeoutMiddleware,
-		nosurf.NewPure,
-		middlewares.LoggingMiddleware,
-	).ThenFunc(fibRedisHandler)
-
-	healthChain := alice.New(
-		middlewares.TimeoutMiddleware,
-		nosurf.NewPure,
-		middlewares.LoggingMiddleware,
-		middlewares.SetHeadersMiddleware,
-	).ThenFunc(healthHandler)
-
-	// Handlers bind
 	http.Handle("/fib", fibChain)
 	http.Handle("/fibr", fibRedisChain)
 	http.Handle("/health-check", healthChain)
-	http.Handle("/redis", redisHandler)
 
-	// Server start
 	log.Fatal(http.ListenAndServe(port, nil))
 }
 

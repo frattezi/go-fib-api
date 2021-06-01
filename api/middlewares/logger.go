@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+// LoggingMiddleware will log the endpoint being called
+// and it's response time
 func LoggingMiddleware(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		t1 := time.Now()
