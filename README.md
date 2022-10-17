@@ -71,39 +71,3 @@ expected output:
 NAME      READY   UP-TO-DATE   AVAILABLE   AGE
 fib-api   1/1     1            1           58s
 ```
-
----
-
-## About the test (to Argyle)
-
-### Day one
-
-Hi, I'm really happy with the test result, I've decided to use Golang for some reasons and I would like to
-ponctuate them here:
-
-- I have low experience with Golang yeat I've got excited with the oportunity to create a project using it.
-- I knew and already created some Golang API, but only in personal projects or using larger tools (gorilla mux, Kong).
-- To me, I thinks it's really cool to create something without depending a lot of third parties libaries and to use type enforcing
-languages for backend development.
-
-With that in mind, I'm finishing the core solution (Basic API + Kubernetes) within ~5 hours, but I think I would like
-to enhance the system a little more. First I've created a basic recursive fibonacci resolution. Then I enhanced it adding 
-memory, tring a little bit of Dynamic programming.
-
-### Day two
-
-The in memory resolution performs well, but since you mentioned that scalability and high calculus capability would be
-important points of the resolution I've decied to include `Redis` as a fast in-memory storage, so diferent executions
-could use previous calculations in order to give responses for higher N's with no problems, and also to enhance the
-response time.
-
-This implementation took ~ 2 hours from where I've stopped in the last day.
-
-
-### Day three
-
-To wrap up my project I've just refactored some repetitive parts off, replacing for better encapsulation functions,
-also enhanced data types and this documentation!
-
-This implementation took ~1 hour.
-
